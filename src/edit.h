@@ -6,7 +6,7 @@ struct ScrollData
 	clLine *topline;	// pointer to line at top of visible window
 	int y;				// line number of line at top of visible window
 	int lasty;			// last y coordinates scroll was at when screen was redrawn
-
+	
 	// longest range of scrollbar UpdateHozScrollBarRange was called
 	int last_hbar_max;
 };
@@ -16,16 +16,16 @@ class EditView
 {
 public:
 	EditView();
-
+	
 	// first and last lines in document
 	clLine *firstline, *lastline;
 	// pointer to line cursor is currently on
 	clLine *curline;
-
+	
 	uint DocID;				// a unique ID number for this session
 	int nlines;				// # of lines in document
 	int lastnlines;			// for redraw
-
+	
 	EditCursor cursor;
 	UndoData undo;
 	ScrollData scroll;
@@ -34,15 +34,15 @@ public:
 	BMatchData bmatch;
 	CmdSeqData cmdseq;
 	SearchData search;
-
+	
 	int xscroll;				// amount editor pane is horizontally scrolled over
-
+	
 	char filename[MAXPATHLEN];
 	char IsUntitled;			// 1 if filename is an auto-generated "untitled" filename
 	bool IsDirty;				// 1 if changes have not been committed to disk
 	bool ModifiedSinceRedraw;	// 1 if document has been modified since last redraw
 	bool CloseAfterSave;
-
+	
 	// set to 1 if something happened during the last refresh that means
 	// fast scrolling via CopyBits() may not yield the correct results.
 	bool CannotUseCopybits;
@@ -52,16 +52,16 @@ public:
 	// files
 	bool Save(const char *filename);
 	static void Save_All();
-
+	
 	void SetDirty();
 	void ClearDirty();
 	void MakeUntitled();
 	void ReloadFile();
-
+	
 	void Close(bool DoSanityCheck=true);
 	uint8 ConfirmClose(bool OfferCancelButton=true);
 	static void Close_All();
-
+	
 	// key handling
 	void HandleKey(int ch);
 	bool ProcessCommandSeq(int ch);
@@ -69,51 +69,51 @@ public:
 	bool IsCommandSeqActive();
 	void MakeCursorVisible();
 	void SelDel();
-
+	
 	// mouse handling
-	void MouseDown(int x, int y);
+	void MouseDown(int x, int y, uint32 buttons);
 	void MouseDrag(int x, int y);
-	void MouseUp();
-
+	void MouseUp(uint32 buttons);
+	
 	// edit_keys selection handling
 	void ExtendOrDropSel(char key);
 	void ExtendSel();
-
+	
 	// actions
 	void action_insert_char(int x, int y, char ch);
 	void action_insert_string(int x, int y, const char *str, int *final_x, int *final_y);
 	void action_insert_cr(int x, int y);
 	void action_delete_right(int x, int y, int count);
 	void action_delete_range(int x1, int y1, int x2, int y2);
-
+	
 	void insert_line(char *initial_string, clLine *insertafter, int y);
 	void delete_line(clLine *line, int y);
-
+	
 	// stuff
 	clLine *GetLineHandle(int y);
 	clLine *GetLineHandleFromStart(int y);
 	clLine *GetLineHandleFromEnd(int y);
 	clLine *GetLineHandleFromCursor(int y);
-
+	
 	void AddToDocPoint(int x, int y, clLine *line, int count, int *x_out, int *y_out);
 	BString *RangeToString(int x1, int y1, int x2, int y2, char *crlf_seq);
-
+	
 	// misc
 	void GetCurrentWordExtent(int *x1_out, int *x2_out);
 	void FixIndentationGaps(void);
 	void CopySelection(void);
 	void PasteFromClipboard(void);
-
+	
 	// scrolling
 	void scroll_up(int nlines);
 	void scroll_down(int nlines);
 	void SetVerticalScroll(int y);
 	void BringLineIntoView(int y, int vismode, int target_screen_y);
 	int GetMaxScroll();
-
+	
 	void SetXScroll(int newvalue);
 	void XScrollToCursor();
-
+	
 	// rendering
 	void FullRedrawView();
 	void RedrawView();

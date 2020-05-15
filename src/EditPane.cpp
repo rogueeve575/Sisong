@@ -33,7 +33,7 @@ void CEditPane::SetFontSize(int new_size)
 {
 	FontDrawer->SetSize(new_size);
 	SetFont(FontDrawer->font);
-
+	
 	editor.font_width = FontDrawer->fontwidth;
 	editor.font_height = FontDrawer->fontheight;
 	
@@ -53,7 +53,7 @@ void CEditPane::Draw(BRect updateRect)
 
 void CEditPane::FrameResized(float untrustworthy_width, \
 							 float untrustworthy_height)
-{	
+{
 	// set new pixel size.
 	// don't trust the width x height arguments we were passed,
 	// they sometimes lie!
@@ -61,7 +61,7 @@ void CEditPane::FrameResized(float untrustworthy_width, \
 	editor.pxheight = (int)HEIGHTOF(Bounds());
 	if (editor.pxwidth < 1) editor.pxwidth = 1;
 	if (editor.pxheight < 1) editor.pxheight = 1;
-
+	
 	// calc size in chars
 	editor.width = (editor.pxwidth / editor.font_width);
 	editor.height = (editor.pxheight / editor.font_height);
@@ -99,7 +99,13 @@ void CEditPane::MouseDown(BPoint where)
 	
 	// transfer mouse click to editor backend
 	if (editor.curev)
-		editor.curev->MouseDown(where.x, where.y);
+	{
+		BPoint where;
+		uint32 buttons;
+		GetMouse(&where, &buttons);
+		
+		editor.curev->MouseDown(where.x, where.y, buttons);
+	}
 }
 
 void CEditPane::MouseMoved(BPoint where, uint32 code, const BMessage *msg)
@@ -115,11 +121,11 @@ void CEditPane::MouseMoved(BPoint where, uint32 code, const BMessage *msg)
 			be_app->SetCursor(B_CURSOR_SYSTEM_DEFAULT);
 		}
 	}
-
+	
 	if (mouse_down && editor.curev)
 	{
 		editor.curev->MouseDrag(where.x, where.y);
-	}	
+	}
 }
 
 void CEditPane::MouseUp(BPoint where)
@@ -127,6 +133,12 @@ void CEditPane::MouseUp(BPoint where)
 	mouse_down = false;
 	
 	if (editor.curev)
-		editor.curev->MouseUp();
+	{
+		BPoint where;
+		uint32 buttons;
+		GetMouse(&where, &buttons);
+		
+		editor.curev->MouseUp(buttons);
+	}
 }
 
