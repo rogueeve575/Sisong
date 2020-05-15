@@ -201,8 +201,19 @@ void CMainWindow::DispatchMessage(BMessage *message, BHandler *handler)
 				message->FindFloat("be:wheel_delta_y", &fDelta);
 				delta_y = (int)fDelta;
 
-				int key = (delta_y > 0) ? KEY_MOUSEWHEEL_DOWN : KEY_MOUSEWHEEL_UP;
-				editor.curev->HandleKey(key);
+				while(delta_y)
+				{
+					if (delta_y > 0)
+					{
+						editor.curev->HandleKey(KEY_MOUSEWHEEL_DOWN);
+						delta_y--;
+					}
+					else
+					{						
+						editor.curev->HandleKey(KEY_MOUSEWHEEL_UP);
+						delta_y++;
+					}
+				}
 			}
 			else
 			{
