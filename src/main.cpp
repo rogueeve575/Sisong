@@ -173,7 +173,7 @@ EApp::EApp()
 				staterr("failed to open command-line file '%s'", fname);
 		}
 		
-		TabBar->SetActiveTab(editor.curev);
+		//TabBar->SetActiveTab(editor.curev);
 		delete cmdLineOpen;
 		cmdLineOpen = NULL;
 	}
